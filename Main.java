@@ -14,23 +14,31 @@ public class Main {
         System.out.println("\nMenu:");
         System.out.println("1)CASH WITHDRAWAL");
         System.out.println("2)BALANCE ENQUIRY");
-        System.out.println("3)DEPOSIT");
+        System.out.println("3)CASH DEPOSIT");
         System.out.println("4)MONEY TRANSFER");
-        System.out.println("5)PIN CHANGE");
+        System.out.println("5)RESET PIN");
         System.out.println("6)EXIT");
-        System.out.println("Enter any one of the options");
+        System.out.print("Enter any one of the options: ");
     }
 
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         ATM atm = new ATM();
-        int acc_no, password;
-        do {
+        int acc_no, password, cnt_wrong_pins = 0;
+        while (true){
             int[] credentials = starterMenu();
             acc_no = credentials[0];
             password = credentials[1];
-        } while (!atm.check(acc_no, password));
+            if(atm.check(acc_no, password)){
+                break;
+            }
+            ++cnt_wrong_pins;
+            if(cnt_wrong_pins == 3){
+                System.out.println("YOU CAN'T TRY MORE THAN THRICE!");
+                return;
+            }
+        }
 
         while(true) {
             mainMenu();
@@ -40,16 +48,16 @@ public class Main {
                 atm.withdrawal(acc_no, password);
             }
             else if (option == 2) {
-
+                atm.balanceEnquiry(acc_no, password);
             }
             else if (option == 3) {
-
+                atm.deposit(acc_no, password);
             }
             else if (option == 4) {
-
+                atm.money_transfer(acc_no, password);
             }
             else if (option == 5) {
-
+                atm.changePin(acc_no, password);
             }
             else if (option == 6) {
                 break;
@@ -58,8 +66,6 @@ public class Main {
                 System.out.println("INVALID OPTION!");
             }
         }
-
-
 
     }
 }
