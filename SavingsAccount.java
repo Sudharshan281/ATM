@@ -2,9 +2,13 @@ public class SavingsAccount implements Account{
 
     private int balance;
 
-    public SavingsAccount() {
+    public SavingsAccount() {       //constructor
         this.balance = 0;
     }
+
+    /**
+     * below we have methods which we override form the interface
+     */
 
     public int getBalance() {
         return balance;
