@@ -3,11 +3,21 @@ import java.util.Scanner;
 
 public class ATM {
 
+    //an arraylist of users, which stores all information of the users in the bank
     ArrayList<User> users = new ArrayList<>();
+    
+    //array of valid pins
     private int[] pins;
+    
+    //array of valid passwords
     protected final int[] ids;
 
     public ATM() {
+        
+        /**
+         * initializes valid pins with respective passwords
+         */
+
         this.ids = new int[]
                         {61298, 98984, 97703, 16715, 62974, 35647, 35251, 45736, 23227, 37196, 50291, 45525,
                         65714, 31961, 70192, 61686, 37482, 12591, 51349, 59193, 75535, 98860, 74771, 66315,
@@ -32,6 +42,12 @@ public class ATM {
 
     }
 
+    /**
+     * @param acc_no
+     * @param password
+     * @return false if there is no such account found
+     */
+    
     protected boolean check(int acc_no, int password) {
         int id_len = String.valueOf(acc_no).length();
         int password_len = String.valueOf(password).length();
@@ -62,6 +78,12 @@ public class ATM {
         return false;
     }
 
+    /**
+     * @param acc_no
+     * @param password
+     * @return returns id of the user found or -1 if no such user exists
+     */
+    
     private int findUser(int acc_no, int password) {
         for(int i=0; i<60; ++i){
             User u = users.get(i);
@@ -72,7 +94,11 @@ public class ATM {
         return -1;
     }
 
-
+    /**
+     * displays the information regarding cash withdrawal
+     * @return returns the amount entered by the user to the method 'withdrawal'
+     */
+    
     private int get_withdrawal_amt() {
         System.out.println("Select Amount");
         System.out.println("1)500");
@@ -98,6 +124,14 @@ public class ATM {
         return amt;
     }
 
+    /**
+     *
+     * @param amt
+     * @param user_idx
+     * @param option
+     * @return true if amount is less than balance in the respective account
+     */
+    
     private boolean balanceAvailable(int amt, int user_idx, int option){
         if (option == 1){
             return users.get(user_idx).cur_acc.withdraw(amt);
@@ -106,7 +140,12 @@ public class ATM {
         return users.get(user_idx).savings_acc.withdraw(amt);
     }
 
-
+    /**
+     * after menu input, this method is run to help withdrawal of user amt
+     * @param acc_no
+     * @param password
+     */
+    
     protected void withdrawal(int acc_no, int password) {
         Scanner in = new Scanner(System.in);
 
@@ -130,6 +169,12 @@ public class ATM {
 
     }
 
+    /**
+     * Helper method to get amount from the user in
+     * count of each denomination
+     * @return
+     */
+                           
     private int getAmt(){
         Scanner in = new Scanner(System.in);
 
@@ -162,7 +207,7 @@ public class ATM {
         System.out.println(" 500     *   "+ fiveHundreds + "     =   "+ (500*fiveHundreds));
         System.out.println(" 100     *   "+ hundreds + "     =   "+ (100*hundreds));
         System.out.println(" 200     *   "+ twoHundreds + "     =   "+ (200*twoHundreds));
-        System.out.println(" 5       *   "+ fives + "        =   "+ (5*fives));
+        System.out.println(" 5       *   "+ fives + "     =   "+ (5*fives));
         System.out.println(" 2       *   "+ twos + "     =   "+ (2*twos));
         System.out.println(" 1       *   "+ ones + "     =   "+ (ones));
         System.out.println("------------------------------------------");
@@ -171,6 +216,12 @@ public class ATM {
         return amt;
     }
 
+    /**
+     * Deposits the amount in users respective account
+     * @param acc_no
+     * @param password
+     */
+                           
     protected void deposit(int acc_no, int password) {
         Scanner in = new Scanner(System.in);
         System.out.println("----------DEPOSIT TO----------");
@@ -180,16 +231,21 @@ public class ATM {
         int option = in.nextInt();
         int amt = getAmt();
 
-        for(int i=0; i<60; ++i){
-            if(users.get(i).getPassword() == password && users.get(i).getId() == acc_no){
-                if(option == 1)
-                    users.get(i).cur_acc.deposit(amt);
-                else
-                    users.get(i).savings_acc.deposit(amt);
-            }
+        int user_idx = findUser(acc_no, password);
+        if(option == 1){
+            users.get(user_idx).cur_acc.deposit(amt);
+        }
+        else{
+            users.get(user_idx).savings_acc.deposit(amt);
         }
     }
 
+    /**
+     * Shows the balance in users respective account
+     * @param acc_no
+     * @param password
+     */
+                           
     protected void balanceEnquiry(int acc_no, int password) {
         Scanner in = new Scanner(System.in);
         System.out.println("Choose your account to check balance");
@@ -203,10 +259,10 @@ public class ATM {
         assert ((option == 1) || (option == 2));
         int balance;
         if(option == 1) {
-            balance = users.get(user_idx).savings_acc.getBalance();
+            balance = users.get(user_idx).cur_acc.getBalance();
         }
         else{
-            balance = users.get(user_idx).cur_acc.getBalance();
+            balance = users.get(user_idx).savings_acc.getBalance();
         }
         System.out.println("Your Balance Amount is : " + balance);
     }
@@ -219,6 +275,14 @@ public class ATM {
         return false;
     }
 
+    /**
+     * checks if required balance is available in the users account or not
+     * @param u
+     * @param req_balance
+     * @param option
+     * @return true if available, else false
+     */
+
     private boolean checkBalance(User u, int req_balance, int option){
         int balance;
         if(option == 1){
@@ -228,6 +292,12 @@ public class ATM {
         return balance >= req_balance;
     }
 
+    /**
+     * Formal agreement asked before making transaction
+     * in an ATM
+     * @return agree or not?
+     */
+                           
     private int transferAgreements(){
         Scanner in = new Scanner(System.in);
         System.out.println("""
@@ -249,12 +319,29 @@ public class ATM {
                                     """);
         return in.nextInt();
     }
-    
-    private void transferUserAmt(int user_idx, int amt){
-        users.get(user_idx).cur_acc.deposit(amt);
-    }
-    
 
+    /**
+     * Helper function for money_transfer
+     * add balance to the resp acc
+     * @param acc_no
+     * @param amt
+     */
+                           
+    private void transferUserAmt(int acc_no, int amt){
+        for(int i=0; i<60; ++i){
+            if(users.get(i).getId() == acc_no){
+                users.get(i).cur_acc.changeBalance(amt);
+            }
+        }
+    }
+
+    /**
+     * reduces money from user acc and add money to the other account
+     * with all valid checks ( such as balance is more than money asked)
+     * @param acc_no
+     * @param password
+     */
+                           
     public void money_transfer(int acc_no, int password) {
         Scanner in = new Scanner(System.in);
         int agree = transferAgreements();
@@ -266,11 +353,11 @@ public class ATM {
         System.out.print("Enter 1 or 2: ");
         int option = in.nextInt();
 
-        System.out.println("ENTER THE BENEFICIARY ACCOUNT NUMBER: ");
+        System.out.print("ENTER THE BENEFICIARY ACCOUNT NUMBER: ");
         int transferNo = in.nextInt();
         assert isValid_acc(transferNo) : "ENTER A VALID ACCOUNT NUMBER";
 
-        System.out.println("PLEASE ENTER TRANSACTION AMOUNT ");
+        System.out.print("PLEASE ENTER TRANSACTION AMOUNT :");
         int transferAmt = in.nextInt();
         User U = users.get(findUser(acc_no, password));
         assert checkBalance(U, transferAmt, option);
@@ -279,14 +366,22 @@ public class ATM {
         assert  user_idx != -1 ;
 
         if(balanceAvailable(transferAmt, user_idx, option)) {
-            transferUserAmt(user_idx, transferAmt);
-            System.out.println("Your transaction is being processed");
+
+            transferUserAmt(transferNo, transferAmt);
+
+            System.out.println("\nYour transaction is being processed");
             System.out.println("            PLEASE WAIT            \n");
             System.out.println("TRANSACTION SUCCESSFUL!");
         }
 
     }
 
+    /**
+     * This methods will help the user to change pin for the respective id
+     * @param acc_no
+     * @param password
+     */
+                           
     public void changePin(int acc_no, int password) {
         Scanner in = new Scanner(System.in);
         for(int i=0; i<60; ++i){
