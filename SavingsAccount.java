@@ -1,21 +1,9 @@
-import java.util.Date;
-
 public class SavingsAccount implements Account{
 
-    int balance;
-    Date entry;
+    private int balance;
 
     public SavingsAccount() {
         this.balance = 0;
-        this.entry = new Date();
-    }
-
-    protected Date getEntry() {
-        return entry;
-    }
-
-    protected void setEntry(Date entry) {
-        this.entry = entry;
     }
 
     public int getBalance() {
@@ -27,13 +15,13 @@ public class SavingsAccount implements Account{
     }
 
     @Override
-    public void display_balance() {
-
-    }
-
-    @Override
-    public void display_transaction_history() {
-
+    public boolean withdraw(int amt) {
+        if(amt > balance){
+            System.out.println("NOT ENOUGH BALANCE TO WITHDRAW!");
+            return false;
+        }
+        this.balance -= amt;
+        return true;
     }
 
     @Override
