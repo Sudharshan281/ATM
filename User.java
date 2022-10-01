@@ -3,8 +3,8 @@ public class User {
      * User has id, password, savings account, current account
      */
 
-    int id;
-    int password;
+    private final int id;
+    private int password;
     SavingsAccount savings_acc;
     CurrentAccount cur_acc;
 
@@ -17,10 +17,6 @@ public class User {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getPassword() {
