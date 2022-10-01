@@ -60,6 +60,7 @@ public class Main {
                 atm.changePin(acc_no, password);
             }
             else if (option == 6) {
+                System.out.println("THANK YOU FOR VISITING OUR ATM");
                 break;
             }
             else {
