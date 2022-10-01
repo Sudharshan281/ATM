@@ -17,7 +17,8 @@ public class Main {
         System.out.println("3)CASH DEPOSIT");
         System.out.println("4)MONEY TRANSFER");
         System.out.println("5)RESET PIN");
-        System.out.println("6)EXIT");
+        System.out.println("6)EXIT ACCOUNT");
+        System.out.println("7)EXIT ATM");
         System.out.print("Enter any one of the options: ");
     }
 
@@ -25,6 +26,10 @@ public class Main {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         ATM atm = new ATM();
+        runATM(atm);
+    }
+
+    public static int[] getInfo(ATM atm){
         int acc_no, password, cnt_wrong_pins = 0;
         while (true){
             int[] credentials = starterMenu();
@@ -36,9 +41,19 @@ public class Main {
             ++cnt_wrong_pins;
             if(cnt_wrong_pins == 3){
                 System.out.println("YOU CAN'T TRY MORE THAN THRICE!");
-                return;
+                return new int[]{-1, -1};
             }
         }
+        return new int[]{acc_no, password};
+    }
+
+    public static void runATM(ATM atm){
+        System.out.println("WELCOME TO OUR ATM");
+        
+        Scanner in = new Scanner(System.in);
+        int[] acnt_details = getInfo(atm);
+        int acc_no = acnt_details[0];
+        int password = acnt_details[1];
 
         while(true) {
             mainMenu();
@@ -60,13 +75,15 @@ public class Main {
                 atm.changePin(acc_no, password);
             }
             else if (option == 6) {
-                System.out.println("THANK YOU FOR VISITING OUR ATM");
+                System.out.println("THANKS FOR VISITING OUR ATM");
+                runATM(atm);
+            }
+            else if(option == 7){
                 break;
             }
             else {
                 System.out.println("INVALID OPTION!");
             }
         }
-
     }
 }
