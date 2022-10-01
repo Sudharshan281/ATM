@@ -1,6 +1,7 @@
 public interface Account {
-    void display_balance();
-    void display_transaction_history();
+    int getBalance();
     void deposit(int amt);
+    void changeBalance(int amt);
+    boolean withdraw(int amt);
 
 }
