@@ -1,6 +1,14 @@
 import java.util.Scanner;
 
 public class Main {
+    
+    /**
+     * This is the starting function in our bank,
+     * each user must go through this function before doing
+     * any operations
+     * @return account number, pin entered by the user
+     */
+    
     public static int[] starterMenu(){
         Scanner in = new Scanner(System.in);
         System.out.print("\nEnter Account Number: ");
@@ -9,6 +17,10 @@ public class Main {
         int pin = in.nextInt();
         return new int[]{acc_no, pin};
     }
+
+    /**
+     * Displays the list of options available for the user to use
+     */
 
     public static void mainMenu(){
         System.out.println("\nMenu:");
@@ -24,11 +36,18 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
+        System.out.println("WELCOME TO OUR ATM");
         ATM atm = new ATM();
         runATM(atm);
     }
 
+    /**
+     * Gets acc no, and password , checks it
+     * if it doesn't match for more than thrice, it stops further execution
+     * @param atm
+     * @return
+     */
+    
     public static int[] getInfo(ATM atm){
         int acc_no, password, cnt_wrong_pins = 0;
         while (true){
@@ -47,13 +66,20 @@ public class Main {
         return new int[]{acc_no, password};
     }
 
+    /**
+     * Get option from the main menu() and call methods from ATM accordingly
+     * @param atm
+     */
+
     public static void runATM(ATM atm){
-        System.out.println("WELCOME TO OUR ATM");
-        
         Scanner in = new Scanner(System.in);
         int[] acnt_details = getInfo(atm);
         int acc_no = acnt_details[0];
         int password = acnt_details[1];
+
+        if(acc_no == -1 && password == -1){
+            return;
+        }
 
         while(true) {
             mainMenu();
@@ -75,7 +101,7 @@ public class Main {
                 atm.changePin(acc_no, password);
             }
             else if (option == 6) {
-                System.out.println("THANKS FOR VISITING OUR ATM");
+                System.out.println("THANKS FOR VISITING OUR ATM\n");
                 runATM(atm);
             }
             else if(option == 7){
